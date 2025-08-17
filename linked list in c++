@@ -1,0 +1,106 @@
+#include <iostream>
+using namespace std;
+
+typedef struct ll{
+    int val;
+    struct ll* next;
+}ll;
+
+ll* head= nullptr;
+
+void push(int d){
+    ll* naya=new ll();
+    if(head==nullptr){
+        naya->val=d;
+        naya->next=nullptr;
+        head=naya;
+        return;
+    }
+    naya->val=d;
+    naya->next=head;
+    head=naya;
+
+}
+
+void insert(int d,int p){
+    ll* temp = new ll();
+    temp->val=d;
+    temp->next=nullptr;
+
+    if(p==1){
+        temp->next=head;
+        head=temp;
+        return;
+    }
+    ll* fake=head;
+
+    for(int i=1;i<p-1;i++){
+        if(fake==nullptr){
+            cout<<"ni degi"<<endl;
+        }
+        fake=fake->next;
+    }
+    temp->next=fake->next;
+    fake->next=temp;
+}
+
+void del(int pos){
+    ll* r=head;
+    ll* l;
+    if(pos==1){
+        head=head->next;
+        return;
+    }
+
+    for(int j=1;j<pos-1;j++){
+        if(r==nullptr){
+            cout<<"kaha tha ni degi"<<endl;
+            return;
+        }
+        r=r->next;
+    }
+    l=r->next;
+    r->next=l->next;
+    cout<<"element remove: "<<l->val<<endl;
+    free(l);
+    
+}
+
+void trev(){
+    ll* temp=head;
+    while(temp!=NULL){
+        cout<<temp->val<<endl;
+        temp=temp->next;        
+    }
+}
+
+void rev(){
+    ll* prev=NULL;
+    ll* cur=head;
+    ll* nxt;
+
+    while(cur!=NULL){
+        nxt=cur->next;
+        cur->next=prev;
+        prev=cur;
+        cur=nxt;
+    }
+
+    head=prev;
+
+}
+
+int main(){
+    ll l1;
+    push(1);
+    push(2);
+    push(3);
+    push(4);
+    insert(5,2);
+    //del(1);
+    trev();
+    rev();
+    trev();
+
+    return 0;
+}
