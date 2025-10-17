@@ -1,0 +1,75 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct node{
+    int val;
+    struct node* next;
+    struct node* prev;
+}node;
+node* head=NULL;
+node* tail=NULL;
+
+void push_front(int value){
+    node* new_node=(node*)malloc(sizeof(node));
+    new_node->val=value;
+    new_node->next=head;
+    new_node->prev=NULL;
+
+    if(head!=NULL){
+        head->prev=new_node; // new node-->oldnode
+    }else{
+        tail=new_node; // head==null , tail==null
+    }
+    head=new_node;
+}
+
+void push_back(int value){
+    node* naya=(node*)malloc(sizeof(node));
+    naya->val=value;
+    naya->next=NULL;
+    naya->prev=tail;
+    if(tail!=NULL){
+        tail->next=naya;
+    }else{
+        head=naya;
+    }
+    tail=naya;
+}
+
+void pop_front(){
+    node*temp=head;
+    head=head->next;
+    free(temp);
+}
+
+void pop_back(){
+    node* temp=tail;
+    tail=tail->prev;
+    free(temp);
+}
+
+void display(){
+    if(head==NULL){
+        printf("   link list empty  ");
+        return;
+    }
+    node* temp=head;
+    while(temp!=NULL){
+        printf("%d",temp->val);
+        temp=temp->next;
+        if(temp!=NULL){
+            printf(" -> ");
+        }
+    }
+}
+
+int main(){
+    push_back(1);
+    push_front(9);
+    push_front(7);
+    push_front(6);
+    push_back(4);
+    pop_front();
+    display();
+    return 0;
+}
