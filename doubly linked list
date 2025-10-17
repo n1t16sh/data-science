@@ -48,6 +48,19 @@ void pop_back(){
     free(temp);
 }
 
+void push_bet(int value , int n){
+    node*temp=head;
+    for(int i=1;i<n-1;i++){
+        temp=temp->next;
+    }
+    node* naya=(node*)malloc(sizeof(node));
+    naya->val=value;
+    naya->next=temp->next;
+    naya->prev=temp;
+    temp->next->prev=naya;
+    temp->next=naya;
+}
+
 void display(){
     if(head==NULL){
         printf("   link list empty  ");
@@ -69,7 +82,7 @@ int main(){
     push_front(7);
     push_front(6);
     push_back(4);
-    pop_front();
+    push_bet(0,3);
     display();
     return 0;
 }
