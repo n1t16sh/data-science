@@ -1,0 +1,212 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+
+#define max(a,b) ((a) > (b) ? (a) : (b))
+
+
+typedef struct node{
+    int val;
+    struct node* left;
+    struct node* right;
+}node;
+
+node* createnode(int value){
+    node* newnode=(node*)malloc(sizeof(struct node));
+    newnode->val=value;
+    newnode->left=NULL;
+    newnode->right=NULL;
+    return newnode;
+}
+// insert a node
+node* insert(node* root, int data){
+    if(root==NULL){
+        return createnode(data);
+    }
+    if(data<root->val){
+        root->left=insert(root->left,data);
+    }else if(data>root->val){
+        root->right=insert(root->right,data);
+    }
+    return root;
+}
+// search a node
+bool serch(node* root ,int x){
+    if(root==NULL) return false;
+    else if(root->val==x) return true;
+    else if(x<root->val) return serch(root->left,x);
+    else return serch(root->right,x);
+}
+// max value node
+void most(node* root){
+    if(root==NULL){
+        printf("empty tree");
+        return;
+    }
+    node* temp=root;
+    while(temp->right!=NULL){
+        temp=temp->right;
+    }
+    printf("%d",temp->val);
+}
+// min value vode
+void min(node* root){
+    if(root==NULL){
+        printf("empty tree");
+        return;
+    }
+    node* temp=root;
+    while(temp->left!=NULL){
+        temp=temp->left;
+    }
+    printf("%d",temp->val);
+}
+// height
+int height(node* root){
+    if(root==NULL) return -1;
+
+    return max(height(root->left),height(root->right))+1;
+}
+// preorder traversal
+void preorder(node* root){
+    if(root==NULL) return;
+    printf("%d ->",root->val);
+
+    preorder(root->left);
+    preorder(root->right);
+    return;
+}
+//inorder traversal
+void inorder(node* root){
+    if(root==NULL) return;
+    inorder(root->left);
+    printf("%d->",root->val);
+    inorder(root->right);
+    return;
+}
+// levelorder traversal
+void levelorder(node* root){
+    if(root==NULL) return;
+
+    node* que[100];
+    int front=0, rear=0;
+
+    que[rear++]=root;
+
+    while(front<rear){
+        node* curr=que[front++];
+        printf("%d->",curr->val);
+
+        if(curr->left!=NULL){
+            que[rear++]=curr->left;
+        }
+        if(curr->right!=NULL){
+            que[rear++]=curr->right;
+        }
+    }
+
+}
+
+// is the tree bst or not
+void list(node* root,int arr[],int* ind){
+    if(root==NULL) return;
+    list(root->left,arr,ind);
+    arr[(*ind)++]=root->val;
+    list(root->right,arr,ind);
+}
+bool isbst(node* root){
+    int arr[100];
+    int ind=0;
+    list(root,arr,&ind);
+
+    for(int i=1;i<ind;i++){
+        if(arr[i]<=arr[i-1]){
+            return false;
+        }
+    }
+    return true;
+}
+
+// deletion of node
+node* helper(node* root){
+    node* current=root;
+    while(current && current->left != NULL){
+        current=current->left;
+    }
+    return current;
+}
+node* delete(node* root,int data){
+    if(root==NULL) return root;
+
+    if(data>root->val){
+        root->right=delete(root->right,data);
+    }else if(data<root->val){
+        root->left=delete(root->left,data);
+    }else{
+        if(root->left==NULL && root->right==NULL){
+            free(root);
+            return NULL;
+        }
+        else if(root->left==NULL){
+            node* temp=root->right;
+            free(root);
+            return temp;
+        }else if(root->right==NULL){
+            node* temp=root->left;
+            free(root);
+            return temp;
+        }
+        node* temp=helper(root->right);
+        root->val=temp->val;
+        root->right=delete(root->right,temp->val);
+    }
+    return root;
+
+}
+
+//imediate successor
+int successor(node* root,int data){
+    int succ=0;
+
+    while(root!=NULL){
+        if(data<root->val){
+            succ=root->val;
+            root=root->left;
+        }else if(data>root->val){
+            root=root->right;
+        }else{
+            break;
+        }
+    }
+    if(root->right!=NULL){
+        node* temp=helper(root->right);
+        return temp->val;
+    }
+    return succ;
+}
+
+
+int main(){
+    node* root=NULL;
+
+    root=insert(root,10);
+    root=insert(root,7);
+    root=insert(root,4);
+    root=insert(root,1);
+    root=insert(root,3);
+    root=insert(root,2);
+    /*bool kya=isbst(root);
+    if(kya==true){
+        printf("it is a bst ");
+    }else{
+        printf("lode ni h ");
+    } */
+    //printf("\n\n");
+    //delete(root,4);
+    //levelorder(root);
+    inorder(root);
+    int x=successor(root,4);
+    printf("\n%d",x);
+
+    return 0;
+}
